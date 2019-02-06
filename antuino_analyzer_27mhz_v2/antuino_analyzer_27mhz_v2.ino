@@ -599,6 +599,89 @@ int menuCalibrate2(int btn){
 
 
 
+int menuSwitchBands(int btn){
+  if (!btn){
+   printLine2("Switch Bands   \x7E");
+  }
+  else {
+    printLine1("Select a band:    ");
+    printLine2("                  ");
+
+    // wait for the button to be raised up
+    while(btnDown())
+      active_delay(50);
+    active_delay(50);  //debounce
+
+    int select = 0, i, btnState;
+
+    menuOn = 2;
+
+    while (menuOn) {
+      i = enc_read();
+      btnState = btnDown();
+
+      checkTimeout();
+
+      if (i != 0)
+        resetTimer();
+
+      if (select + i < 60)
+        select += i;
+
+      if (i < 0 && select - i >= 0)
+        select += i;      //caught ya, i is already -ve here, so you add it
+
+      // https://en.wikipedia.org/wiki/List_of_amateur_radio_frequency_bands_in_India
+      if (select < 10) {
+        if (!btnState) {
+          printLine2("7 MHz         ");
+        } else {
+          frequency = 7000000;
+          takeReading(frequency);
+          updateDisplay();
+          menuExit(btnState);
+        }
+      } else if (select < 20) {
+        if (!btnState) {
+          printLine2("14 MHz        ");
+        } else {
+          frequency = 14000000;
+          takeReading(frequency);
+          updateDisplay();
+          menuExit(btnState);
+        }
+      } else if (select < 30) {
+        if (!btnState) {
+          printLine2("144 MHz       ");
+        } else {
+          frequency = 144000000;
+          takeReading(frequency);
+          updateDisplay();
+          menuExit(btnState);
+        }
+      } else if (select < 40) {
+        if (!btnState) {
+          printLine2("434 MHz       ");
+        } else {
+          frequency = 434000000;
+          takeReading(frequency);
+          updateDisplay();
+          menuExit(btnState);
+        }
+     } else {
+        menuExit(btnState);
+     }
+    }
+  }
+
+  //debounce the button
+  while(btnDown())
+    active_delay(50);
+  active_delay(50);
+}
+
+
+
 int menuSelectMeasurementRx(int btn){
   if (!btn){
    printLine2("Measurement RX \x7E");
@@ -685,6 +768,8 @@ void doMenu(){
       menuSelectNetworkAnalyzer(btnState);
     else if (select < 50)
       menuCalibrate2(btnState);
+    else if (select < 60)
+      menuSwitchBands(btnState);
     else
       menuExit(btnState);
   }
@@ -856,5 +941,3 @@ void loop() {
     prev = r;
   }
 }
-
-
