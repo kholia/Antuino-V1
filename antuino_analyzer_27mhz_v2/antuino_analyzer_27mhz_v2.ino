@@ -41,7 +41,7 @@ unsigned long timeOut = 0;
 /* for reading and writing from serial port */
 unsigned char serial_in_count = 0;
 
-void active_delay(int delay_by){
+void active_delay(unsigned int delay_by){
   unsigned long timeStart = millis();
 
   while (millis() - timeStart <= delay_by) {
@@ -49,9 +49,9 @@ void active_delay(int delay_by){
   }
 }
 
-int calibrateClock(){
+void calibrateClock(){
   int knob = 0;
-  int32_t prev_calibration;
+  // int32_t prev_calibration;
 
 
   //keep clear of any previous button press
@@ -59,7 +59,7 @@ int calibrateClock(){
     active_delay(100);
   active_delay(100);
 
-  prev_calibration = xtal_freq_calibrated;
+  // prev_calibration = xtal_freq_calibrated;
   xtal_freq_calibrated = 27000000l;
 
   si5351aSetFrequency_clk1(10000000l);
@@ -133,12 +133,12 @@ const int PROGMEM vswr[] = {
 10
 };
 
-void printLine1(char *c){
+void printLine1(const char *c){
     lcd.setCursor(0, 0);
     lcd.print(c);
 }
 
-void printLine2(char *c){
+void printLine2(const char *c){
   lcd.setCursor(0, 1);
   lcd.print(c);
 }
@@ -182,7 +182,7 @@ int enc_read(void) {
   byte newState;
   int enc_speed = 0;
 
-  long stop_by = millis() + 50;
+  unsigned long stop_by = millis() + 50;
 
   while (millis() < stop_by) { // check if the previous state was stable
     newState = enc_state(); // Get current state
@@ -354,10 +354,9 @@ void setup() {
   updateDisplay();
 }
 
-int menuBand(int btn){
+void  menuBand(int btn){
   int knob = 0;
-  int band, prev = 0, r;
-  unsigned long offset;
+  int prev = 0, r;
   unsigned long prev_freq;
 
 
@@ -422,7 +421,6 @@ int tuningClicks = 0;
 int tuningSpeed = 0;
 void doTuning(){
   int s;
-  unsigned long prev_freq;
 
   s = enc_read();
 
@@ -461,7 +459,6 @@ void doTuning(){
 
 void doTuning2(){
   int s;
-  unsigned long prev_freq;
 
   s = enc_read();
 
@@ -478,7 +475,6 @@ void doTuning2(){
 //  Serial.println(tuningClicks);
   if (s != 0){
     resetTimer();
-    prev_freq = frequency;
 
     if (tuningSpeed >= 5 && tuningClicks > 100)
       frequency += 10000000l;
@@ -520,7 +516,7 @@ void doTuning2(){
 
 
 
-int menuSelectAntAnalyzer(int btn){
+void menuSelectAntAnalyzer(int btn){
   if (!btn){
    printLine2("Ant. Analyzer  \x7E");
   }
@@ -555,7 +551,7 @@ int readOpen(unsigned long f){
   return r/10;
 }
 
-int menuCalibrate2(int btn){
+void menuCalibrate2(int btn){
   if (!btn){
    printLine2("Calibrate SWR  \x7E");
   }
@@ -574,7 +570,7 @@ int menuCalibrate2(int btn){
 
     printLine1("Calibrating.....");
 
-    int i, r;
+    int r;
     mode = MODE_ANTENNA_ANALYZER;
     printLine2("");
     delay(100);
@@ -599,7 +595,7 @@ int menuCalibrate2(int btn){
 
 
 
-int menuSwitchBands(int btn){
+void menuSwitchBands(int btn){
   if (!btn){
    printLine2("Switch Bands   \x7E");
   }
@@ -682,7 +678,7 @@ int menuSwitchBands(int btn){
 
 
 
-int menuSelectMeasurementRx(int btn){
+void menuSelectMeasurementRx(int btn){
   if (!btn){
    printLine2("Measurement RX \x7E");
   }
@@ -701,7 +697,7 @@ int menuSelectMeasurementRx(int btn){
   }
 }
 
-int menuSelectNetworkAnalyzer(int btn){
+void menuSelectNetworkAnalyzer(int btn){
   if (!btn){
    printLine2("SNA            \x7E");
   }
@@ -781,8 +777,6 @@ void doMenu(){
 }
 
 void checkButton(){
-  int i, t1, t2, knob, new_knob;
-
   //only if the button is pressed
   if (!btnDown())
     return;
@@ -870,7 +864,6 @@ void sendStatus(){
 }
 
 void parseCommand(char *line){
-  unsigned long param = 0;
   char *p = line;
   char command;
 
