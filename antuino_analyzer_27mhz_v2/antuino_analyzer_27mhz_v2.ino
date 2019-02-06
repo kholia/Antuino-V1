@@ -45,7 +45,7 @@ void active_delay(int delay_by){
   unsigned long timeStart = millis();
 
   while (millis() - timeStart <= delay_by) {
-      //Background Work      
+      //Background Work
   }
 }
 
@@ -62,7 +62,7 @@ int calibrateClock(){
   prev_calibration = xtal_freq_calibrated;
   xtal_freq_calibrated = 27000000l;
 
-  si5351aSetFrequency_clk1(10000000l);  
+  si5351aSetFrequency_clk1(10000000l);
   ltoa(xtal_freq_calibrated - 27000000l, c, 10);
   printLine2(c);
 
@@ -74,13 +74,13 @@ int calibrateClock(){
       xtal_freq_calibrated += 10;
     else if (knob < 0)
       xtal_freq_calibrated -= 10;
-    else 
+    else
       continue; //don't update the frequency or the display
 
-    si5351aSetFrequency_clk1(10000000l);  
-      
+    si5351aSetFrequency_clk1(10000000l);
+
     ltoa(xtal_freq_calibrated - 27000000l, c, 10);
-    printLine2(c);     
+    printLine2(c);
   }
 
   printLine2("Calibration set!");
@@ -130,7 +130,7 @@ const int PROGMEM vswr[] = {
 1,
 10,
 10,
-10 
+10
 };
 
 void printLine1(char *c){
@@ -178,31 +178,31 @@ byte enc_state (void) {
 }
 
 int enc_read(void) {
-  int result = 0; 
+  int result = 0;
   byte newState;
   int enc_speed = 0;
-  
+
   long stop_by = millis() + 50;
-  
+
   while (millis() < stop_by) { // check if the previous state was stable
-    newState = enc_state(); // Get current state  
-    
+    newState = enc_state(); // Get current state
+
     if (newState != enc_prev_state)
       delay (1);
-    
+
     if (enc_state() != newState || newState == enc_prev_state)
-      continue; 
+      continue;
     //these transitions point to the encoder being rotated anti-clockwise
-    if ((enc_prev_state == 0 && newState == 2) || 
-      (enc_prev_state == 2 && newState == 3) || 
-      (enc_prev_state == 3 && newState == 1) || 
+    if ((enc_prev_state == 0 && newState == 2) ||
+      (enc_prev_state == 2 && newState == 3) ||
+      (enc_prev_state == 3 && newState == 1) ||
       (enc_prev_state == 1 && newState == 0)){
         result--;
       }
     //these transitions point o the enccoder being rotated clockwise
-    if ((enc_prev_state == 0 && newState == 1) || 
-      (enc_prev_state == 1 && newState == 3) || 
-      (enc_prev_state == 3 && newState == 2) || 
+    if ((enc_prev_state == 0 && newState == 1) ||
+      (enc_prev_state == 1 && newState == 3) ||
+      (enc_prev_state == 3 && newState == 2) ||
       (enc_prev_state == 2 && newState == 0)){
         result++;
       }
@@ -246,7 +246,7 @@ void updateDisplay() {
     strcpy(c, "  ");
     strncat(c, b, 1);
     strcat(c, ".");
-    strncat(c, &b[1], 3);    
+    strncat(c, &b[1], 3);
     strcat(c, ".");
     strncat(c, &b[4], 3);
   }
@@ -264,14 +264,14 @@ void updateDisplay() {
        return_loss = 30;
     if (return_loss < 0)
        return_loss = 0;
-    
+
     vswr_reading = pgm_read_word_near(vswr + return_loss);
     sprintf (c, "%ddb VSWR=%d.%01d", return_loss, vswr_reading/10, vswr_reading%10);
   }else if (mode == MODE_MEASUREMENT_RX){
     sprintf(c, "%d dbm         ", analogRead(DBM_READING)/5 + dbmOffset);
   }
   else if (mode == MODE_NETWORK_ANALYZER) {
-    sprintf(c, "%d dbm         ", analogRead(DBM_READING)/5 + dbmOffset);  
+    sprintf(c, "%d dbm         ", analogRead(DBM_READING)/5 + dbmOffset);
   }
   printLine2(c);
 }
@@ -297,28 +297,28 @@ void takeReading(long newfreq){
   if (prev_freq != newfreq){
     switch(mode){
     case MODE_MEASUREMENT_RX:
-      si5351aSetFrequency_clk2(local_osc);    
+      si5351aSetFrequency_clk2(local_osc);
     break;
     case MODE_NETWORK_ANALYZER:
-      si5351aSetFrequency_clk2(local_osc);  
+      si5351aSetFrequency_clk2(local_osc);
       si5351aSetFrequency_clk0(newfreq);
       Serial.print(local_osc);
       Serial.print(' ');
       Serial.println(newfreq);
     break;
     default:
-      si5351aSetFrequency_clk2(local_osc);  
+      si5351aSetFrequency_clk2(local_osc);
       si5351aSetFrequency_clk1(newfreq);
-    }      
+    }
     prev_freq = newfreq;
-  }     
+  }
 }
 
 void setup() {
   lcd.begin(16, 2);
   Wire.begin();
   Serial.begin(9600);
-  Serial.flush();  
+  Serial.flush();
   Serial.println("i Antuino v1.01");
   analogReference(DEFAULT);
 
@@ -331,7 +331,7 @@ void setup() {
 
   if (0< last_freq && last_freq < 500000000l)
       frequency = last_freq;
-    
+
   if (xtal_freq_calibrated < 26900000l || xtal_freq_calibrated > 27100000l)
     xtal_freq_calibrated = 27000000l;
 
@@ -339,16 +339,16 @@ void setup() {
   pinMode(ENC_B, INPUT_PULLUP);
   pinMode(FBUTTON, INPUT_PULLUP);
   pinMode(BACK_LIGHT, OUTPUT);
-  
-  digitalWrite(BACK_LIGHT, LOW);  
+
+  digitalWrite(BACK_LIGHT, LOW);
   printLine1("Antuino v1.1");
-  delay(2000);  
+  delay(2000);
   digitalWrite(BACK_LIGHT, HIGH);
 
   if (btnDown()){
     calibrateClock();
   }
-  
+
   si5351aOutputOff(SI_CLK0_CONTROL);
   takeReading(frequency);
   updateDisplay();
@@ -370,17 +370,17 @@ int menuBand(int btn){
   //wait for the button menu select button to be lifted)
   while (btnDown())
     active_delay(50);
-  active_delay(50);    
+  active_delay(50);
 
   while(!btnDown()){
 
     prev_freq = frequency;
     knob = enc_read();
     checkTimeout();
-    
+
     if (knob != 0){
 
-      resetTimer();     
+      resetTimer();
 
       if (knob < 0 && frequency > 3000000l)
         frequency -= 250000l;
@@ -390,9 +390,9 @@ int menuBand(int btn){
       if (prev_freq <= 150000000l && frequency > 150000000l)
         frequency = 350000000l;
       if (prev_freq >= 350000000l && frequency < 350000000l)
-        frequency = 149999000l; 
+        frequency = 149999000l;
 
-       
+
       takeReading(frequency);
       updateDisplay();
       printLine2("Band Select");
@@ -402,7 +402,7 @@ int menuBand(int btn){
       if (r != prev){
         takeReading(frequency);
         updateDisplay();
-        prev = r;    
+        prev = r;
       }
     }
     active_delay(20);
@@ -412,7 +412,7 @@ int menuBand(int btn){
   while(btnDown())
     active_delay(50);
   active_delay(50);
-  
+
   printLine2("");
   updateDisplay();
 }
@@ -493,7 +493,7 @@ void doTuning2(){
     else if (tuningSpeed == 0 && s > 0)
       frequency += 100l;
     else if (tuningSpeed == 0 && s < 0)
-      frequency -= 100l;    
+      frequency -= 100l;
     else if (tuningSpeed == -1)
       frequency -= 1000l;
     else if (tuningSpeed == -2)
@@ -551,7 +551,7 @@ int readOpen(unsigned long f){
   sprintf(b, "%ld: %d  ", f, r/10);
   printLine2(b);
   delay(1000);
-  
+
   return r/10;
 }
 
@@ -573,7 +573,7 @@ int menuCalibrate2(int btn){
       active_delay(50);
 
     printLine1("Calibrating.....");
-    
+
     int i, r;
     mode = MODE_ANTENNA_ANALYZER;
     printLine2("");
@@ -583,13 +583,13 @@ int menuCalibrate2(int btn){
     r = readOpen(140000000l);
     EEPROM.put(OPEN_VHF, r);
     r = readOpen(440000000l);    EEPROM.put(OPEN_UHF, r);
-    
+
     menuOn = 0;
-   
+
     printLine1("Calibrating.....");
     printLine2("Done!           ");
     delay(1000);
-    
+
     //switch off just the tracking source
     si5351aOutputOff(SI_CLK0_CONTROL);
     takeReading(frequency);
@@ -605,14 +605,14 @@ int menuSelectMeasurementRx(int btn){
   }
   else {
     mode = MODE_MEASUREMENT_RX;
-    printLine2("Measurement RX!");    
+    printLine2("Measurement RX!");
     active_delay(500);
     printLine2("");
     menuOn = 0;
 
     //only allow the local oscillator to work
     si5351aOutputOff(SI_CLK0_CONTROL);
-    si5351aOutputOff(SI_CLK1_CONTROL);    
+    si5351aOutputOff(SI_CLK1_CONTROL);
     takeReading(frequency);
     updateDisplay();
   }
@@ -620,17 +620,17 @@ int menuSelectMeasurementRx(int btn){
 
 int menuSelectNetworkAnalyzer(int btn){
   if (!btn){
-   printLine2("SNA            \x7E");   
+   printLine2("SNA            \x7E");
   }
   else {
     mode = MODE_NETWORK_ANALYZER;
-    printLine2("SNA!           ");    
+    printLine2("SNA!           ");
     active_delay(500);
     printLine2("");
     menuOn = 0;
 
     //switch off the clock2 that drives the return loss bridge
-    si5351aOutputOff(SI_CLK1_CONTROL);        
+    si5351aOutputOff(SI_CLK1_CONTROL);
     takeReading(frequency);
     updateDisplay();
   }
@@ -657,21 +657,21 @@ void doMenu(){
   while(btnDown())
     active_delay(50);
   active_delay(50);  //debounce
-  
+
   menuOn = 2;
-  
+
   while (menuOn){
     i = enc_read();
     btnState = btnDown();
-    
+
     checkTimeout();
 
     if (i != 0)
         resetTimer();
-        
+
     if (select + i < 60)
       select += i;
- 
+
     if (i < 0 && select - i >= 0)
       select += i;      //caught ya, i is already -ve here, so you add it
 
@@ -757,7 +757,7 @@ char *readNumber(char *p, unsigned long *number){
     char c = *p;
     if ('0' <= c && c <= '9')
       *number = (*number * 10) + c - '0';
-    else 
+    else
       break;
      p++;
   }
@@ -768,14 +768,14 @@ char *skipWhitespace(char *p){
   while (*p && (*p == ' ' || *p == ','))
     p++;
   return p;
-} 
+}
 
 /* command 'h' */
 void sendStatus(){
   Serial.write("helo v1\n");
   sprintf(c, "from %ld\n", fromFrequency);
   Serial.write(c);
-   
+
   sprintf(c, "to %ld\n", toFrequency);
   Serial.write(c);
 
@@ -792,7 +792,7 @@ void parseCommand(char *line){
   while (*p){
     p = skipWhitespace(p);
     command = *p++;
-    
+
     switch (command){
       case 'f' : //from - start frequency
         p = readNumber(p, &fromFrequency);
@@ -813,7 +813,7 @@ void parseCommand(char *line){
          break;
       case 'r':
          readDetector(frequency);
-         break;        
+         break;
       case 'i': /* identifies itself */
         Serial.write("iAntuino 1.1\n");
         break;
@@ -824,13 +824,13 @@ void parseCommand(char *line){
 void acceptCommand(){
   int inbyte = 0;
   inbyte = Serial.read();
-  
+
   if (inbyte == '\n'){
-    parseCommand(serial_in);    
-    serial_in_count = 0;    
+    parseCommand(serial_in);
+    serial_in_count = 0;
     return;
   }
-  
+
   if (serial_in_count < sizeof(serial_in)){
     serial_in[serial_in_count] = inbyte;
     serial_in_count++;
@@ -846,7 +846,7 @@ void loop() {
 
   checkTimeout();
   if (Serial.available()>0)
-    acceptCommand();    
+    acceptCommand();
 
   delay(50);
   int r = analogRead(DBM_READING);
