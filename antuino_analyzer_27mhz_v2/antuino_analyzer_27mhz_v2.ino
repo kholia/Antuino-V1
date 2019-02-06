@@ -621,7 +621,7 @@ void menuSwitchBands(int btn){
       if (i != 0)
         resetTimer();
 
-      if (select + i < 60)
+      if (select + i < 80)
         select += i;
 
       if (i < 0 && select - i >= 0)
@@ -630,7 +630,7 @@ void menuSwitchBands(int btn){
       // https://en.wikipedia.org/wiki/List_of_amateur_radio_frequency_bands_in_India
       if (select < 10) {
         if (!btnState) {
-          printLine2("7 MHz         ");
+          printLine2("7 MHz (40m)   ");
         } else {
           frequency = 7000000;
           takeReading(frequency);
@@ -639,7 +639,7 @@ void menuSwitchBands(int btn){
         }
       } else if (select < 20) {
         if (!btnState) {
-          printLine2("14 MHz        ");
+          printLine2("14 MHz (20m)  ");
         } else {
           frequency = 14000000;
           takeReading(frequency);
@@ -648,7 +648,7 @@ void menuSwitchBands(int btn){
         }
       } else if (select < 30) {
         if (!btnState) {
-          printLine2("144 MHz       ");
+          printLine2("144 MHz (VHF) ");
         } else {
           frequency = 144000000;
           takeReading(frequency);
@@ -657,16 +657,43 @@ void menuSwitchBands(int btn){
         }
       } else if (select < 40) {
         if (!btnState) {
-          printLine2("434 MHz       ");
+          printLine2("434 MHz (UHF) ");
         } else {
           frequency = 434000000;
           takeReading(frequency);
           updateDisplay();
           menuExit(btnState);
         }
-     } else {
+      } else if (select < 50) {
+        if (!btnState) {
+          printLine2("21 MHz (15m)  ");
+        } else {
+          frequency = 21000000;
+          takeReading(frequency);
+          updateDisplay();
+          menuExit(btnState);
+        }
+      } else if (select < 60) {
+        if (!btnState) {
+          printLine2("28 MHz (10m)  ");
+        } else {
+          frequency = 28000000;
+          takeReading(frequency);
+          updateDisplay();
+          menuExit(btnState);
+        }
+      } else if (select < 70) {
+        if (!btnState) {
+          printLine2("50 MHz (6m)   ");
+        } else {
+          frequency = 50000000;
+          takeReading(frequency);
+          updateDisplay();
+          menuExit(btnState);
+        }
+      } else {
         menuExit(btnState);
-     }
+      }
     }
   }
 
