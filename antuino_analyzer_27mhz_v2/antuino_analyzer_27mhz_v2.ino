@@ -635,7 +635,7 @@ void menuSwitchBands(int btn){
           frequency = 7000000;
           takeReading(frequency);
           updateDisplay();
-          menuExit(btnState);
+          menuOn = 0;
         }
       } else if (select < 20) {
         if (!btnState) {
@@ -644,7 +644,7 @@ void menuSwitchBands(int btn){
           frequency = 14000000;
           takeReading(frequency);
           updateDisplay();
-          menuExit(btnState);
+          menuOn = 0;
         }
       } else if (select < 30) {
         if (!btnState) {
@@ -653,7 +653,7 @@ void menuSwitchBands(int btn){
           frequency = 144000000;
           takeReading(frequency);
           updateDisplay();
-          menuExit(btnState);
+          menuOn = 0;
         }
       } else if (select < 40) {
         if (!btnState) {
@@ -662,7 +662,7 @@ void menuSwitchBands(int btn){
           frequency = 434000000;
           takeReading(frequency);
           updateDisplay();
-          menuExit(btnState);
+          menuOn = 0;
         }
       } else if (select < 50) {
         if (!btnState) {
@@ -671,7 +671,7 @@ void menuSwitchBands(int btn){
           frequency = 21000000;
           takeReading(frequency);
           updateDisplay();
-          menuExit(btnState);
+          menuOn = 0;
         }
       } else if (select < 60) {
         if (!btnState) {
@@ -680,7 +680,7 @@ void menuSwitchBands(int btn){
           frequency = 28000000;
           takeReading(frequency);
           updateDisplay();
-          menuExit(btnState);
+          menuOn = 0;
         }
       } else if (select < 70) {
         if (!btnState) {
@@ -689,10 +689,11 @@ void menuSwitchBands(int btn){
           frequency = 50000000;
           takeReading(frequency);
           updateDisplay();
-          menuExit(btnState);
+          menuOn = 0;
         }
       } else {
         menuExit(btnState);
+        menuOn = 0;
       }
     }
   }
