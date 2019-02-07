@@ -344,7 +344,7 @@ void setup() {
   Wire.begin();
   Serial.begin(9600);
   Serial.flush();
-  Serial.println("i Antuino v1.01");
+  Serial.println("i Antuino v1.2");
   analogReference(DEFAULT);
 
   unsigned long last_freq = 0;
@@ -366,7 +366,7 @@ void setup() {
   pinMode(BACK_LIGHT, OUTPUT);
 
   digitalWrite(BACK_LIGHT, LOW);
-  printLine1("Antuino v1.1");
+  printLine1("Antuino v1.2");
   sprintf(c, "Voltage = ");
   dtostrf(readVcc()/1000.0, 4, 2, &c[10]);
   printLine2(c);
@@ -949,7 +949,7 @@ void parseCommand(char *line){
          readDetector(frequency);
          break;
       case 'i': /* identifies itself */
-        Serial.write("iAntuino 1.1\n");
+        Serial.write("i Antuino 1.2\n");
         break;
     }
   } /* end of the while loop */
