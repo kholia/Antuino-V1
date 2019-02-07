@@ -866,7 +866,11 @@ void doSweep(){
   unsigned long x, stepSize;
   int reading, vswr_reading;
 
-  stepSize = (toFrequency - fromFrequency) / 300;
+  /* stepSize = (toFrequency - fromFrequency) / 3000;
+  if (stepSize <= 0) {
+    stepSize = 300;
+  } */
+  stepSize = 10000; // is this resolution enough?
   Serial.write("begin\n");
   for (x = fromFrequency; x < toFrequency; x = x + stepSize){
     takeReading(x);
