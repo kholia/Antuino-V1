@@ -168,9 +168,9 @@ void checkTimeout(){
   if (timeOut > millis())
     return;
   digitalWrite(BACK_LIGHT, LOW);
-  EEPROM.get(LAST_FREQ, last_freq);
+  /* EEPROM.get(LAST_FREQ, last_freq);
   if (last_freq != frequency)
-    EEPROM.put(LAST_FREQ, frequency);
+    EEPROM.put(LAST_FREQ, frequency); */
 }
 
 byte enc_state (void) {
