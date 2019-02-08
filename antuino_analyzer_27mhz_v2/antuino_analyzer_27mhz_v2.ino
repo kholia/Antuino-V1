@@ -28,6 +28,8 @@ int return_loss;
 unsigned long frequency = 10000000l;
 unsigned long fromFrequency=14150000;
 unsigned long toFrequency=30000000;
+
+unsigned long stepSize = 10000;  // 10 KHz, for sweeping
 //int openReading = 93; // in dbm
 int openHF = 96;
 int openVHF = 96;
@@ -863,14 +865,13 @@ void readDetector(unsigned long f){
 }
 
 void doSweep(){
-  unsigned long x, stepSize;
+  unsigned long x;
   int reading, vswr_reading;
 
   /* stepSize = (toFrequency - fromFrequency) / 3000;
   if (stepSize <= 0) {
     stepSize = 300;
   } */
-  stepSize = 10000; // is this resolution enough?
   Serial.write("begin\n");
   for (x = fromFrequency; x < toFrequency; x = x + stepSize){
     takeReading(x);
@@ -952,6 +953,9 @@ void parseCommand(char *line){
       case 'r':
          readDetector(frequency);
          break;
+      case 's':
+        p = readNumber(p, &stepSize);
+        break;
       case 'i': /* identifies itself */
         Serial.write("i Antuino 1.2\n");
         break;
