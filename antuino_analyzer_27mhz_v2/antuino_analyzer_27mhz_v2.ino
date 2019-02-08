@@ -266,7 +266,7 @@ void updateDisplay() {
        return_loss = 0;
 
     vswr_reading = pgm_read_word_near(vswr + return_loss);
-    sprintf (c, "%ddb VSWR=%d.%01d", return_loss, vswr_reading/10, vswr_reading%10);
+    sprintf (c, "%ddb VSWR=%d.%01d     ", return_loss, vswr_reading/10, vswr_reading%10);
   }else if (mode == MODE_MEASUREMENT_RX){
     sprintf(c, "%d dbm         ", analogRead(DBM_READING)/5 + dbmOffset);
   }
