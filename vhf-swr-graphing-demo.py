@@ -3,6 +3,7 @@
 import sys
 import time
 import serial
+import optparse
 import serial.tools.list_ports
 
 import numpy as np
@@ -15,10 +16,10 @@ sws = %s
 """
 
 
-def main(startf="135000000", endf="t150000000"):
+def main(startf="135000000", endf="t150000000", step_size="500000"):
     # ser = serial.Serial('/dev/ttyACM0')
 
-    # detect antuino port
+    # auto-detect antuino port
     """
     $ lsusb
     ...
@@ -35,6 +36,7 @@ def main(startf="135000000", endf="t150000000"):
             break
 
     if not found:
+        print("I couldn't find a connected antuino. Exiting!\n")
         sys.exit(0)
 
     ser = serial.Serial(device, baudrate=9600)  # Arduino Nano v2 clone on Linux
@@ -43,7 +45,7 @@ def main(startf="135000000", endf="t150000000"):
     # wait for the connection to settle down
     time.sleep(3)
 
-    ser.write(b"s500000\n")
+    ser.write(b"s%s\n" % step_size)
     ser.write(b"f%s\n" % startf)
     ser.write(b"t%s\n" % endf)
 
@@ -102,11 +104,14 @@ def main(startf="135000000", endf="t150000000"):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 2:
-        startf = sys.argv[1]
-        endf = sys.argv[2]
+    if len(sys.argv) < 3:
+        print("Usage: %s -f <start frequency (hertz)> -t <stop frequency> [-s <step size>]" % sys.argv[0])
+        print("\nExample: python %s -f 140000000 -t 150000000" % sys.argv[0])
+        sys.exit(0)
 
-        main(startf, endf)
+    parser = optparse.OptionParser()
+    parser.add_option('-f', action="store", dest="startf", help="start frequency")
+    parser.add_option('-t', action="store", dest="endf", help="stop frequency")
+    options, remainder = parser.parse_args()
 
-    main()
-
+    main(options.startf, options.endf)
