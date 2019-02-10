@@ -16,7 +16,7 @@ sws = %s
 """
 
 
-def main(startf="135000000", endf="t150000000", step_size="500000"):
+def main(startf="135000000", endf="t150000000", step_size="500000", xtick=0.5, ytick=0.1):
     # ser = serial.Serial('/dev/ttyACM0')
 
     # auto-detect antuino port
@@ -95,23 +95,31 @@ def main(startf="135000000", endf="t150000000", step_size="500000"):
     if True:
         start, end = ax.get_xlim()
         starty, endy = ax.get_ylim()
-        ax.xaxis.set_ticks(np.arange(start, end, 0.5))
+        ax.xaxis.set_ticks(np.arange(start, end, xtick))
         ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
-        ax.yaxis.set_ticks(np.arange(starty, endy, 0.1))
+        ax.yaxis.set_ticks(np.arange(starty, endy, ytick))
         ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
 
     plt.show()
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
+    parser = optparse.OptionParser()
+    parser.add_option('-f', action="store", dest="startf", help="start frequency", default="35000000")
+    parser.add_option('-t', action="store", dest="endf", help="stop frequency", default="150000000")
+    parser.add_option('-s', action="store", dest="step_size", help="sweep step size", default="500000")
+    parser.add_option('-x', action="store", dest="xtick", help="x-axis tick value", default=0.5, type="float")
+    parser.add_option('-y', action="store", dest="ytick", help="y-axis tick value", default=0.1, type="float")
+
+    if len(sys.argv) < 2:
         print("Usage: %s -f <start frequency (hertz)> -t <stop frequency> [-s <step size>]" % sys.argv[0])
-        print("\nExample: python %s -f 140000000 -t 150000000" % sys.argv[0])
+        print("\nExample: python %s -f 140000000 -t 150000000\n" % sys.argv[0])
+        for option in parser.option_list:
+            if option.default != ("NO", "DEFAULT"):
+                option.help += (" " if option.help else "") + "[default: %default]"
+        parser.print_help(sys.stderr)
         sys.exit(0)
 
-    parser = optparse.OptionParser()
-    parser.add_option('-f', action="store", dest="startf", help="start frequency")
-    parser.add_option('-t', action="store", dest="endf", help="stop frequency")
     options, remainder = parser.parse_args()
 
-    main(options.startf, options.endf)
+    main(options.startf, options.endf, options.step_size, options.xtick, options.ytick)

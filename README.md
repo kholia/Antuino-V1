@@ -41,7 +41,7 @@ Arduino+Si5351 = Antenna/Network Analyzer
 7. Reboot the antuino device. After the reboot, antuino is ready to be used.
 
 
-## Note on powering antunio
+## Notes on powering antunio
 
 The following power sources are stable:
 
