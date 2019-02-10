@@ -39,3 +39,16 @@ Arduino+Si5351 = Antenna/Network Analyzer
    `antuino`. Note: Keep the antenna disconnected during this process.
 
 7. Reboot the antuino device. After the reboot, antuino is ready to be used.
+
+
+## Note on powering antunio
+
+The following power sources are stable:
+
+* USB 2.0 and USB 3.0 ports on Desktop computers
+
+* Chinese 6x18650 USB / 9v DC power banks
+
+The following power sources are somewhat unstable:
+
+* Small 9v battery

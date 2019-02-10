@@ -3,9 +3,10 @@
 import sys
 import time
 import serial
+import serial.tools.list_ports
 
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 template = """frequencies = %s
@@ -16,7 +17,27 @@ sws = %s
 
 def main(startf="135000000", endf="t150000000"):
     # ser = serial.Serial('/dev/ttyACM0')
-    ser = serial.Serial('/dev/ttyUSB0', baudrate=9600)  # Arduino Nano v2 clone on Linux
+
+    # detect antuino port
+    """
+    $ lsusb
+    ...
+    $ Bus 001 Device 022: ID 1a86:7523 QinHeng Electronics HL-340 USB-Serial adapter
+    ...
+    """
+
+    ports = list(serial.tools.list_ports.comports())
+    found = None
+    for p in ports:
+        if p.vid == 0x1a86:
+            found = p
+            device = p.device
+            break
+
+    if not found:
+        sys.exit(0)
+
+    ser = serial.Serial(device, baudrate=9600)  # Arduino Nano v2 clone on Linux
     # ser.flushInput()
 
     # wait for the connection to settle down
@@ -69,7 +90,7 @@ def main(startf="135000000", endf="t150000000"):
     plt.xlabel("Frequency (MHz)")
     plt.ylabel("SWR")
 
-    if False:
+    if True:
         start, end = ax.get_xlim()
         starty, endy = ax.get_ylim()
         ax.xaxis.set_ticks(np.arange(start, end, 0.5))
