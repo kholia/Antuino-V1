@@ -49,6 +49,6 @@ The following power sources are stable:
 
 * Chinese 6x18650 USB / 9v DC power banks
 
-The following power sources are somewhat unstable:
+The following power sources are unstable:
 
 * Small 9v battery
