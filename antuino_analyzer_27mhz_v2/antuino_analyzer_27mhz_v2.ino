@@ -651,7 +651,7 @@ void menuSwitchBands(int btn){
       if (i != 0)
         resetTimer();
 
-      if (select + i < 80)
+      if (select + i < 100)
         select += i;
 
       if (i < 0 && select - i >= 0)
@@ -678,27 +678,27 @@ void menuSwitchBands(int btn){
         }
       } else if (select < 30) {
         if (!btnState) {
-          printLine2("144 MHz (VHF) ");
+          printLine2("18 MHz (17m)  ");
         } else {
-          frequency = 144000000;
+          frequency = 18000000;
           takeReading(frequency);
           updateDisplay();
           menuOn = 0;
         }
       } else if (select < 40) {
         if (!btnState) {
-          printLine2("434 MHz (UHF) ");
+          printLine2("21 MHz (15m)  ");
         } else {
-          frequency = 434000000;
+          frequency = 21000000;
           takeReading(frequency);
           updateDisplay();
           menuOn = 0;
         }
       } else if (select < 50) {
         if (!btnState) {
-          printLine2("21 MHz (15m)  ");
+          printLine2("24 MHz (12m)  ");
         } else {
-          frequency = 21000000;
+          frequency = 24000000;
           takeReading(frequency);
           updateDisplay();
           menuOn = 0;
@@ -717,6 +717,24 @@ void menuSwitchBands(int btn){
           printLine2("50 MHz (6m)   ");
         } else {
           frequency = 50000000;
+          takeReading(frequency);
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 80) {
+        if (!btnState) {
+          printLine2("144 MHz (VHF) ");
+        } else {
+          frequency = 144000000;
+          takeReading(frequency);
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 90) {
+        if (!btnState) {
+          printLine2("434 MHz (UHF) ");
+        } else {
+          frequency = 434000000;
           takeReading(frequency);
           updateDisplay();
           menuOn = 0;
