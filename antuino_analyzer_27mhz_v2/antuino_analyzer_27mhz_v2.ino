@@ -344,7 +344,7 @@ long readVcc() {
 void setup() {
   lcd.begin(16, 2);
   Wire.begin();
-  Serial.begin(9600);
+  Serial.begin(9600); // This can be increased to 115200 (tested limit). However, some CH340 chips may have problems with baud rates > 9600.
   Serial.flush();
   Serial.println("i Antuino v1.2");
   analogReference(DEFAULT);
