@@ -29,7 +29,8 @@ unsigned long frequency = 10000000l;
 unsigned long fromFrequency=14150000;
 unsigned long toFrequency=30000000;
 
-unsigned long stepSize = 10000;  // 10 KHz, for sweeping
+// unsigned long stepSize = 10000;  // 10 KHz, for sweeping
+unsigned long stepSize = 50000;  // 10 KHz, for sweeping
 //int openReading = 93; // in dbm
 int openHF = 96;
 int openVHF = 96;
@@ -627,7 +628,7 @@ void menuCalibrate2(int btn){
 
 void menuSwitchBands(int btn){
   if (!btn){
-   printLine2("Switch Bands   \x7E");
+    printLine2("Switch Bands   \x7E");
   }
   else {
     printLine1("Select a band:    ");
@@ -752,6 +753,138 @@ void menuSwitchBands(int btn){
   active_delay(50);
 }
 
+void frequencyToString(unsigned long f)
+{
+    memset(c, 0, sizeof(c));
+    memset(b, 0, sizeof(b));
+
+    ultoa(f, b, DEC);
+    if (frequency >= 100000000l){
+      strncat(c, b, 3);
+      strcat(c, ".");
+      strncat(c, &b[3], 2);
+    }
+    else if (frequency >= 10000000l){
+      strcpy(c, " ");
+      strncat(c, b, 2);
+      strcat(c, ".");
+      strncat(c, &b[2], 2);
+    }
+    else {
+      strcpy(c, "  ");
+      strncat(c, b, 1);
+      strcat(c, ".");
+      strncat(c, &b[1], 2);
+    }
+}
+
+#define NREADINGS 3
+
+void menuSweeper(int btn) {
+  if (!btn){
+    printLine2("SWR sweep    ");
+  }
+  else {
+    int reading, vswr_reading, i;
+    unsigned long x;
+
+    unsigned long fs[NREADINGS];
+    unsigned long top_end = 0;
+    int vs[NREADINGS];
+
+    for (i = 0; i < NREADINGS; i ++) {
+      vs[i] = 9999;
+      fs[i] = 0;
+    }
+
+    if (frequency < 400000000) {
+      fromFrequency = frequency - 3000000;
+      toFrequency = frequency + 3000000;
+    } else {
+      fromFrequency = frequency - 10000000;
+      toFrequency = frequency + 10000000;
+    }
+    printLine1("SWR sweeping...   ");
+
+    memset(buff, 0, sizeof(buff));
+    frequencyToString(fromFrequency);
+    strcat(buff, c);
+    strcat(buff, " - ");
+    frequencyToString(toFrequency);
+    strcat(buff, c);
+    strcat(buff, "  ");
+    printLine2(buff);
+    active_delay(3000);
+
+    for (x = fromFrequency; x < toFrequency; x = x + stepSize) {
+      takeReading(x);
+      delay(10);
+      reading = openReading(x) - analogRead(DBM_READING)/5;
+      if (reading < 0)
+        reading = 0;
+      vswr_reading = pgm_read_word_near(vswr + reading);
+      if (vswr_reading/10 < 1)  // dirty stability hack
+        continue;
+
+      // Keep three lowest SWR values
+      /* if (vswr_reading < vs[0]) {
+        vs[2] = vs[1];
+        vs[1] = vs[0];
+        vs[0] = vswr_reading;
+
+        fs[2] = fs[1];
+        fs[1] = fs[0];
+        fs[0] = x;
+      } else if (vswr_reading < vs[1]) {
+        vs[2] = vs[1];
+        vs[1] = vswr_reading;
+
+        fs[2] = fs[1];
+        fs[1] = x;
+      } else if (vswr_reading < vs[2]) {
+        vs[2] = vswr_reading;
+        fs[2] = x;
+      } */
+
+      if (vswr_reading < vs[0]) {
+        vs[0] = vswr_reading;
+        fs[0] = x;
+        top_end = x;
+      } else if (vswr_reading == vs[0]) {
+        top_end = x;
+      }
+    }
+
+    // for (i = 0; i < 3; i ++) {
+    for (i = 0; i < 1; i ++) {  // showing one dip is recommended by vu2ash
+      memset(buff, 0, sizeof(buff));
+
+      frequencyToString(fs[i]);
+      strcat(buff, c);
+      strcat(buff, " - ");
+      frequencyToString(top_end);
+      strcat(buff, c);
+      strcat(buff, "      ");
+      printLine1(buff);
+
+      memset(buff, 0, sizeof(buff));
+      frequencyToString(fs[i]);
+      vswr_reading = vs[i];
+      sprintf(buff, "%s => %d.%01d     ", c, vswr_reading/10, vswr_reading%10);
+      printLine2(buff);
+      active_delay(4000);
+    }
+
+    // debounce the button
+    while(btnDown())
+      active_delay(50);
+    active_delay(50);
+
+    menuOn = 0;
+    return;
+  }
+}
+
 
 
 void menuSelectMeasurementRx(int btn){
@@ -824,7 +957,7 @@ void doMenu(){
     if (i != 0)
         resetTimer();
 
-    if (select + i < 60)
+    if (select + i < 70)
       select += i;
 
     if (i < 0 && select - i >= 0)
@@ -833,15 +966,17 @@ void doMenu(){
     if (select < 10)
       menuBand(btnState);
     else if (select < 20)
-      menuSelectAntAnalyzer(btnState);
+      menuSwitchBands(btnState);
     else if (select < 30)
-      menuSelectMeasurementRx(btnState);
+      menuSweeper(btnState);
     else if (select < 40)
       menuSelectNetworkAnalyzer(btnState);
     else if (select < 50)
       menuCalibrate2(btnState);
     else if (select < 60)
-      menuSwitchBands(btnState);
+      menuSelectAntAnalyzer(btnState);
+    else if (select < 70)
+      menuSelectMeasurementRx(btnState);
     else
       menuExit(btnState);
   }
