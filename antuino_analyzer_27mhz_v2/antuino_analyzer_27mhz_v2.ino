@@ -26,8 +26,10 @@ LiquidCrystal lcd(8,9,10,11,12,13);
 char b[32], c[32], buff[32], serial_in[32];
 int return_loss;
 unsigned long frequency = 10000000l;
-unsigned long fromFrequency=14150000;
-unsigned long toFrequency=30000000;
+unsigned long fromFrequency = 14150000;
+unsigned long toFrequency = 30000000;
+int targetSWR = 20;  // 2.0
+unsigned long sweepRange = 300000;
 
 // unsigned long stepSize = 10000;  // 10 KHz, for sweeping
 unsigned long stepSize = 50000;  // 10 KHz, for sweeping
@@ -753,49 +755,255 @@ void menuSwitchBands(int btn){
   active_delay(50);
 }
 
+
+
+void menuSelectSweepWindow(int btn){
+  if (!btn){
+    printLine2("Sweep Range   \x7E");
+  }
+  else {
+    printLine1("Select Sweep Range");
+    printLine2("                  ");
+
+    // wait for the button to be raised up
+    while(btnDown())
+      active_delay(50);
+    active_delay(50);  //debounce
+
+    int select = 0, i, btnState;
+
+    menuOn = 2;
+
+    while (menuOn) {
+      i = enc_read();
+      btnState = btnDown();
+
+      checkTimeout();
+
+      if (i != 0)
+        resetTimer();
+
+      if (select + i < 80)
+        select += i;
+
+      if (i < 0 && select - i >= 0)
+        select += i;      //caught ya, i is already -ve here, so you add it
+
+      if (select < 10) {
+        if (!btnState) {
+          printLine2("1 KHz         ");
+        } else {
+          sweepRange = 1000;
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 20) {
+        if (!btnState) {
+          printLine2("10 KHz        ");
+        } else {
+          sweepRange = 10000;
+          takeReading(frequency);
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 30) {
+        if (!btnState) {
+          printLine2("100 KHz       ");
+        } else {
+          sweepRange = 100000;
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 40) {
+        if (!btnState) {
+          printLine2("500 KHz       ");
+        } else {
+          sweepRange =  500000;
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 50) {
+        if (!btnState) {
+          printLine2("1 MHz         ");
+        } else {
+          sweepRange = 1000000;
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 60) {
+        if (!btnState) {
+          printLine2("2 MHz         ");
+        } else {
+          sweepRange = 2000000;
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 70) {
+        if (!btnState) {
+          printLine2("3 MHz         ");
+        } else {
+          sweepRange = 3000000;
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 80) {
+        if (!btnState) {
+          printLine2("10 MHz        ");
+        } else {
+          sweepRange = 10000000;
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else {
+        menuExit(btnState);
+        menuOn = 0;
+      }
+    }
+  }
+
+  //debounce the button
+  while(btnDown())
+    active_delay(50);
+  active_delay(50);
+}
+
+
+
+void menuSelectTargetSWR(int btn){
+  if (!btn){
+    printLine2("Set Target SWR \x7E");
+  }
+  else {
+    printLine1("Set Target SWR    ");
+    printLine2("                  ");
+
+    // wait for the button to be raised up
+    while(btnDown())
+      active_delay(50);
+    active_delay(50);  //debounce
+
+    int select = 0, i, btnState;
+
+    menuOn = 2;
+
+    while (menuOn) {
+      i = enc_read();
+      btnState = btnDown();
+
+      checkTimeout();
+
+      if (i != 0)
+        resetTimer();
+
+      if (select + i < 70)
+        select += i;
+
+      if (i < 0 && select - i >= 0)
+        select += i;      //caught ya, i is already -ve here, so you add it
+
+      if (select < 10) {
+        if (!btnState) {
+          printLine2("1.5           ");
+        } else {
+          targetSWR = 15;
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 20) {
+        if (!btnState) {
+          printLine2("2             ");
+        } else {
+          targetSWR = 20;
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 30) {
+          printLine2("2.5           ");
+        if (!btnState) {
+        } else {
+          targetSWR = 25;
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 40) {
+        if (!btnState) {
+          printLine2("3             ");
+        } else {
+          targetSWR = 30;
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 50) {
+        if (!btnState) {
+          printLine2("3.5           ");
+        } else {
+          targetSWR = 35;
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else if (select < 60) {
+        if (!btnState) {
+          printLine2("4             ");
+        } else {
+          targetSWR = 40;
+          updateDisplay();
+          menuOn = 0;
+        }
+      } else {
+        menuExit(btnState);
+        menuOn = 0;
+      }
+    }
+  }
+
+  //debounce the button
+  while(btnDown())
+    active_delay(50);
+  active_delay(50);
+}
+
+
+
 void frequencyToString(unsigned long f)
 {
     memset(c, 0, sizeof(c));
     memset(b, 0, sizeof(b));
 
     ultoa(f, b, DEC);
-    if (frequency >= 100000000l){
+    if (f >= 100000000l){
       strncat(c, b, 3);
       strcat(c, ".");
       strncat(c, &b[3], 2);
     }
-    else if (frequency >= 10000000l){
-      strcpy(c, " ");
+    else if (f >= 10000000l){
       strncat(c, b, 2);
       strcat(c, ".");
       strncat(c, &b[2], 2);
     }
     else {
-      strcpy(c, "  ");
       strncat(c, b, 1);
       strcat(c, ".");
       strncat(c, &b[1], 2);
     }
 }
 
-#define NREADINGS 3
+
 
 void menuSweeper(int btn) {
+
   if (!btn){
     printLine2("SWR sweep    ");
   }
   else {
-    int reading, vswr_reading, i;
+    int reading, vswr_reading;
     unsigned long x;
 
-    unsigned long fs[NREADINGS];
-    unsigned long top_end = 0;
-    int vs[NREADINGS];
+    unsigned long fs = 0;
+    unsigned long fe = 0;
+    int lvswr = 9999;
 
-    for (i = 0; i < NREADINGS; i ++) {
-      vs[i] = 9999;
-      fs[i] = 0;
-    }
+    unsigned long tfs = 0;
+    unsigned long tfe = 0;
 
     if (frequency < 400000000) {
       fromFrequency = frequency - 3000000;
@@ -812,7 +1020,7 @@ void menuSweeper(int btn) {
     strcat(buff, " - ");
     frequencyToString(toFrequency);
     strcat(buff, c);
-    strcat(buff, "  ");
+    strcat(buff, "         ");
     printLine2(buff);
     active_delay(3000);
 
@@ -846,34 +1054,54 @@ void menuSweeper(int btn) {
         fs[2] = x;
       } */
 
-      if (vswr_reading < vs[0]) {
-        vs[0] = vswr_reading;
-        fs[0] = x;
-        top_end = x;
-      } else if (vswr_reading == vs[0]) {
-        top_end = x;
+      if (vswr_reading < lvswr) {
+        lvswr = vswr_reading;
+        fs = x;
+        fe = x;
+      } else if (vswr_reading == lvswr) {
+        fe = x;
+      }
+
+      if (vswr_reading < targetSWR) {
+        if (tfs == 0) {
+          tfs = x;
+        }
+
+        tfe = x;
       }
     }
 
-    // for (i = 0; i < 3; i ++) {
-    for (i = 0; i < 1; i ++) {  // showing one dip is recommended by vu2ash
-      memset(buff, 0, sizeof(buff));
+    // showing one dip is recommended by vu2ash
+    memset(buff, 0, sizeof(buff));
+    frequencyToString(fs);
+    strcat(buff, c);
+    strcat(buff, " - ");
+    frequencyToString(fe);
+    strcat(buff, c);
+    strcat(buff, "      ");
+    printLine1(buff);
+    memset(buff, 0, sizeof(buff));
+    frequencyToString(fs);
+    vswr_reading = lvswr;
+    sprintf(buff, "%s => %d.%01d     ", c, vswr_reading/10, vswr_reading%10);
+    printLine2(buff);
+    active_delay(4000);
 
-      frequencyToString(fs[i]);
-      strcat(buff, c);
-      strcat(buff, " - ");
-      frequencyToString(top_end);
-      strcat(buff, c);
-      strcat(buff, "      ");
-      printLine1(buff);
-
-      memset(buff, 0, sizeof(buff));
-      frequencyToString(fs[i]);
-      vswr_reading = vs[i];
-      sprintf(buff, "%s => %d.%01d     ", c, vswr_reading/10, vswr_reading%10);
-      printLine2(buff);
-      active_delay(4000);
-    }
+    // show bandwidth for the target swr value
+    memset(buff, 0, sizeof(buff));
+    frequencyToString(tfs);
+    strcat(buff, c);
+    strcat(buff, " - ");
+    frequencyToString(tfe);
+    strcat(buff, c);
+    strcat(buff, "      ");
+    printLine1(buff);
+    memset(buff, 0, sizeof(buff));
+    frequencyToString(tfs);
+    vswr_reading = targetSWR;
+    sprintf(buff, "%s => %d.%01d     ", c, vswr_reading/10, vswr_reading%10);
+    printLine2(buff);
+    active_delay(4000);
 
     // debounce the button
     while(btnDown())
@@ -957,7 +1185,7 @@ void doMenu(){
     if (i != 0)
         resetTimer();
 
-    if (select + i < 70)
+    if (select + i < 90)
       select += i;
 
     if (i < 0 && select - i >= 0)
@@ -977,6 +1205,10 @@ void doMenu(){
       menuSelectAntAnalyzer(btnState);
     else if (select < 70)
       menuSelectMeasurementRx(btnState);
+    else if (select < 80)
+      menuSelectSweepWindow(btnState);
+     else if (select < 90)
+      menuSelectTargetSWR(btnState);
     else
       menuExit(btnState);
   }
