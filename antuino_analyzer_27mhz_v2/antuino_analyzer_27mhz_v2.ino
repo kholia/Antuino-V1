@@ -349,7 +349,7 @@ void setup() {
   Wire.begin();
   Serial.begin(9600); // This can be increased to 115200 (tested limit). However, some CH340 chips may have problems with baud rates > 9600.
   Serial.flush();
-  Serial.println("i Antuino v1.2");
+  Serial.println("i Antuino v1.3");
   analogReference(DEFAULT);
 
   unsigned long last_freq = 0;
@@ -371,7 +371,7 @@ void setup() {
   pinMode(BACK_LIGHT, OUTPUT);
 
   digitalWrite(BACK_LIGHT, LOW);
-  printLine1("Antuino v1.2");
+  printLine1("Antuino v1.3");
   sprintf(c, "Voltage = ");
   dtostrf(readVcc()/1000.0, 4, 2, &c[10]);
   printLine2(c);
@@ -1342,7 +1342,7 @@ void parseCommand(char *line){
         p = readNumber(p, &stepSize);
         break;
       case 'i': /* identifies itself */
-        Serial.write("i Antuino 1.2\n");
+        Serial.write("i Antuino 1.3\n");
         break;
     }
   } /* end of the while loop */
