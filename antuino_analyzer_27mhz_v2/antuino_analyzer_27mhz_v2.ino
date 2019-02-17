@@ -132,7 +132,7 @@ const int PROGMEM vswr[] = {
 11,
 11,
 11,
-1,
+10,
 10,
 10,
 10
@@ -1031,8 +1031,8 @@ void menuSweeper(int btn) {
       if (reading < 0)
         reading = 0;
       vswr_reading = pgm_read_word_near(vswr + reading);
-      if (vswr_reading/10 < 1)  // dirty stability hack
-        continue;
+      /* if (vswr_reading/10 < 1)  // dirty stability hack
+        continue; */
 
       // Keep three lowest SWR values
       /* if (vswr_reading < vs[0]) {
