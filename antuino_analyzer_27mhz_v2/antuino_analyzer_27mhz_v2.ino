@@ -173,9 +173,9 @@ void checkTimeout(){
   if (timeOut > millis())
     return;
   digitalWrite(BACK_LIGHT, LOW);
-  /* EEPROM.get(LAST_FREQ, last_freq);
+  EEPROM.get(LAST_FREQ, last_freq);
   if (last_freq != frequency)
-    EEPROM.put(LAST_FREQ, frequency); */
+    EEPROM.put(LAST_FREQ, frequency);
 }
 
 byte enc_state (void) {
@@ -1026,13 +1026,13 @@ void menuSweeper(int btn) {
 
     for (x = fromFrequency; x < toFrequency; x = x + stepSize) {
       takeReading(x);
-      delay(10);
+      delay(25);
       reading = openReading(x) - analogRead(DBM_READING)/5;
       if (reading < 0)
         reading = 0;
       vswr_reading = pgm_read_word_near(vswr + reading);
-      /* if (vswr_reading/10 < 1)  // dirty stability hack
-        continue; */
+      if (vswr_reading/10 < 1)  // dirty stability hack
+        continue;
 
       // Keep three lowest SWR values
       /* if (vswr_reading < vs[0]) {
