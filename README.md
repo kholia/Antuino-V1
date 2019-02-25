@@ -13,10 +13,11 @@ Arduino+Si5351 = Antenna/Network Analyzer
 
    On Linux, the CH340 / CH341 USB controller works automatically.
 
-2. Connect `antuino` to a PC using a USB cable.
+2. Connect `antuino` to a PC using a USB `A Male to Mini B` cable. External DC
+   power is not required for programming the AA.
 
-3. Open the `antuino` sketch (`antuino_analyzer_27mhz_v2.ino`) in
-   [Arduino IDE](https://www.arduino.cc/en/main/software).
+3. Install `Arduino IDE` and open the `antuino` sketch
+   (`antuino_analyzer_27mhz_v2.ino`) in [Arduino IDE](https://www.arduino.cc/en/main/software).
 
 4. In the Arduino IDE, select the following options.
 
