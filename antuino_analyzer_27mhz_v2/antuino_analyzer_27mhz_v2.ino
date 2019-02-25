@@ -1088,19 +1088,24 @@ void menuSweeper(int btn) {
     active_delay(4000);
 
     // show bandwidth for the target swr value
-    memset(buff, 0, sizeof(buff));
-    frequencyToString(tfs);
-    strcat(buff, c);
-    strcat(buff, " - ");
-    frequencyToString(tfe);
-    strcat(buff, c);
-    strcat(buff, "      ");
-    printLine1(buff);
-    memset(buff, 0, sizeof(buff));
-    frequencyToString(tfs);
     vswr_reading = targetSWR;
-    sprintf(buff, "%s => %d.%01d     ", c, vswr_reading/10, vswr_reading%10);
-    printLine2(buff);
+    if (tfs != 0) {
+      memset(buff, 0, sizeof(buff));
+      frequencyToString(tfs);
+      strcat(buff, c);
+      strcat(buff, " - ");
+      frequencyToString(tfe);
+      strcat(buff, c);
+      strcat(buff, "      ");
+      printLine1(buff);
+      memset(buff, 0, sizeof(buff));
+      frequencyToString(tfs);
+      sprintf(buff, "%s => %d.%01d     ", c, vswr_reading/10, vswr_reading%10);
+      printLine2(buff);
+    } else {
+      sprintf(buff, "TGT %d.%01d unmet ", vswr_reading/10, vswr_reading%10);
+      printLine2(buff);
+    }
     active_delay(4000);
 
     // debounce the button
