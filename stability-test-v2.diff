@@ -1,0 +1,24 @@
+diff --git a/antuino_analyzer_27mhz_v2/antuino_analyzer_27mhz_v2.ino b/antuino_analyzer_27mhz_v2/antuino_analyzer_27mhz_v2.ino
+index 00f6c78..d303e91 100644
+--- a/antuino_analyzer_27mhz_v2/antuino_analyzer_27mhz_v2.ino
++++ b/antuino_analyzer_27mhz_v2/antuino_analyzer_27mhz_v2.ino
+@@ -1006,8 +1006,8 @@ void menuSweeper(int btn) {
+     unsigned long tfe = 0;
+ 
+     if (frequency < 400000000) {
+-      fromFrequency = frequency - 3000000;
+-      toFrequency = frequency + 3000000;
++      fromFrequency = frequency - 100;
++      toFrequency = frequency + 100;
+     } else {
+       fromFrequency = frequency - 10000000;
+       toFrequency = frequency + 10000000;
+@@ -1024,6 +1024,8 @@ void menuSweeper(int btn) {
+     printLine2(buff);
+     active_delay(3000);
+ 
++    stepSize = 2;
++
+     for (x = fromFrequency; x < toFrequency; x = x + stepSize) {
+       takeReading(x);
+       delay(25);
