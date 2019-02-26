@@ -1,0 +1,6 @@
+9cf96fddf474eda80f2b4c09f8ef19443cf6768429819e4cba7b869291b7b8b5  CH341SER.EXE
+1af3fdebfbab3e247feb588aea64dd64  CH341SER.EXE
+
+https://www.virustotal.com/#/file/9cf96fddf474eda80f2b4c09f8ef19443cf6768429819e4cba7b869291b7b8b5/detection
+
+This is version 3.4, dated 2016-09-27.

@@ -9,7 +9,7 @@ Arduino+Si5351 = Antenna/Network Analyzer
 
    http://www.wch.cn/download/CH341SER_EXE.html
 
-   Mirror URL: https://github.com/himalayanelixir/Arduino_USB_Drivers/tree/master/Windows
+   Note: A local copy of this driver is now included in this repository.
 
    On Linux, the CH340 / CH341 USB controller works automatically.
 
