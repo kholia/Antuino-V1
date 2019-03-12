@@ -10,8 +10,4 @@
 
 * Wireless support (Bluetooth using HC-05 likely) - might require hardware mods
 
-* Eliminate `display` of weird `open line` SWR values
-
-  - The AA shows values like 8.7, 17.4 in `open line` condition
-
-  Note: When `SWR sweep` is running in `open line` condition, we don't get these weird values!
+* Add support for "fixed tune step" based tuning (VU2SFJ)

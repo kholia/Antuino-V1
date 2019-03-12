@@ -162,7 +162,7 @@ int btnDown(){
 
 void resetTimer(){
   //push the timer to the next
-  timeOut = millis() + 10000l;
+  timeOut = millis() + 30000l;
   digitalWrite(BACK_LIGHT, HIGH);
 }
 
@@ -263,6 +263,7 @@ void updateDisplay() {
     strcat(c, "  SNA");
   printLine1(c);
 
+  active_delay(1); // wait for the circuit to settle down
   if (mode == MODE_ANTENNA_ANALYZER){
     return_loss = openReading(frequency) - analogRead(DBM_READING)/5;
     if (return_loss > 30)
