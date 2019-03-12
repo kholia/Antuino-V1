@@ -616,7 +616,7 @@ void menuCalibrate2(int btn){
     menuOn = 0;
 
     printLine1("Calibrating.....");
-    printLine2("Done!           ");
+    printLine2("OK! Reboot!     ");
     delay(1000);
 
     //switch off just the tracking source
