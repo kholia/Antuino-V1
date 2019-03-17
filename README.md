@@ -2,6 +2,8 @@
 
 Arduino+Si5351 = Antenna/Network Analyzer
 
+**Please don't contact me privately for support.**
+
 ## Firmware Upgrade Process
 
 1. On Windows, install the device driver for the CH340 / CH341 USB controller
@@ -42,7 +44,7 @@ Arduino+Si5351 = Antenna/Network Analyzer
 7. Reboot the antuino device. After the reboot, antuino is ready to be used.
 
 
-## Notes on powering antunio
+## Notes on powering antuino
 
 The following power sources are stable:
 
@@ -50,21 +52,26 @@ The following power sources are stable:
 
 * Chinese 6x18650 USB / 9v DC power banks
 
-The following power sources are unstable:
+The following power sources may be unstable:
 
 * Small 9v battery
 
 
+## Sample SWR plot
+
+![Sample SWR plot - Diamond X-50 antenna](./Diamond-X-50-SWR-VHF-profile.png)
+
+
 ### Notes
 
-1. Anil Sharma (VU2TFG) reports that `antunio` SWR values are pretty close to
+1. Anil Sharma (VU2TFG) reports that `antuino` SWR values are pretty close to
    the SWR values shown by `GEK - 60MHz Antenna Analyzer by VU3GEK`.
 
    http://homebrewcorner.blogspot.com/p/page-update-642015-need-of-useful-tool.html
 
    The GEK AA feels pretty solid and has a dual-digit SWR display (e.g. 1.82).
 
-   In comparison, `antunio` has a single digit SWR display (e.g. 1.8).
+   In comparison, `antuino` has a single digit SWR display (e.g. 1.8).
 
    The GEK AA is a fixed-function instrument and can't be programmed. In
-   comparison, the possibilities are endless with `antunio`.
+   comparison, the possibilities are endless with `antuino`.
