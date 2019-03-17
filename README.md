@@ -53,3 +53,18 @@ The following power sources are stable:
 The following power sources are unstable:
 
 * Small 9v battery
+
+
+### Notes
+
+1. Anil Sharma (VU2TFG) reports that `antunio` SWR values are pretty close to
+   the SWR values shown by `GEK - 60MHz Antenna Analyzer by VU3GEK`.
+
+   http://homebrewcorner.blogspot.com/p/page-update-642015-need-of-useful-tool.html
+
+   The GEK AA feels pretty solid and has a dual-digit SWR display (e.g. 1.82).
+
+   In comparison, `antunio` has a single digit SWR display (e.g. 1.8).
+
+   The GEK AA is a fixed-function instrument and can't be programmed. In
+   comparison, the possibilities are endless with `antunio`.
