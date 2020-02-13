@@ -16,7 +16,7 @@ sws = %s
 """
 
 
-def main(startf="135000000", endf="t150000000", step_size="500000", xtick=0.5, ytick=0.1):
+def main(startf="135000000", endf="150000000", step_size="500000", xtick=0.5, ytick=0.1):
     # ser = serial.Serial('/dev/ttyACM0')
 
     # auto-detect antuino port

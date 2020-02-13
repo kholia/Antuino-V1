@@ -1,0 +1,12 @@
+# https://github.com/arduino/arduino-cli/releases
+
+port := $(shell python board_detect.py)
+fqbn := arduino:avr:nano:cpu=atmega328old
+
+default:
+	arduino-cli lib install LiquidCrystal
+	arduino-cli compile --fqbn=${fqbn} antuino_analyzer_27mhz_v2
+
+upload:
+	echo $(port)
+	arduino-cli upload -p "${port}" --fqbn=${fqbn} antuino_analyzer_27mhz_v2
